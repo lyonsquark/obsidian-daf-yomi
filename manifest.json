@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-daf-yomi",
+	"name": "Daf Yomi",
+	"version": "1.0.1",
+	"minAppVersion": "0.9.12",
+	"description": "Fill in Daf Yomi pages",
+	"author": "Adam Lyon",
+	"authorUrl": "https://lyon-fnal.github.io",
+	"isDesktopOnly": false
+}
