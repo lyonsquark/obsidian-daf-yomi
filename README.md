@@ -31,7 +31,7 @@ As mentioned above, the plugin will also make a `/Judiasm/Daf/Sukkah/Tractate Su
 If you want to download information (currently the only choice is the Koren Bavli page from the Steinsaltz Center), you also need to fill in the attachments directory (I'm not sure how to get this from Obsidian itself). If you use one directory for all of your attachments, use an absolute path (e.g. `/myattachments`). If you have an attachments directory in each of your directories (I do this), then give the directory name without a leading slash. The plugin will create this directory as necessary.
 
 ## Limitations
-Some resources are only available for today's Daf and a few weeks in the past. The plugin doesn't check if a link is actually available. So it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
+Some resources are only available for today's Daf and a few weeks in the past. The plugin doesn't check if a link is actually available, so it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
 
 I also expect things to go wrong on the first day of a new Tractate, as it's not clear how some sites will name their links until that day comes. I will try to make fixes and a new release on such days.
 
