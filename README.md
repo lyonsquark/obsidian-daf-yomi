@@ -40,4 +40,5 @@ The resources here are what I use. Again, open an issue or a pull request if you
 ## The code
 This is my first Obsidian plugin. I'm happy for people to look at my code and tell me how to do things better. I mostly followed [obsidian-pluck](https://github.com/kevboh/obsidian-pluck) as a nice example. The code to download and write PDFs was somewhat challenging to figure out. Everything happens in the `main.ts` file. 
 
-
+## Let me know how it goes!
+If you find any problems, please open an issue. And if you find this plugin to be useful, please open an issue too and let me know! I would love to know if this is interesting to more than just me :-)
