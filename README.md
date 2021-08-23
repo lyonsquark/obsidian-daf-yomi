@@ -6,9 +6,12 @@ The purpose of this [Obsidian](https://obsidian.md) plugin is to prepare a note 
 
 Compiled from 200-500 CE, the Talmud is the base of Rabbinic Judaism and Jewish religious law and contains not just the laws, but exhaustive arguments surrounding them. With Daf Yomi, one learns more about these laws, about this "talmudic" way of thinking, and what life was like a long time ago (hint: be happy that toilet paper has much improved!).
 
-There are a lot of resources to help with Daf Yomi including podcasts and commentaries. This plugin prepares a note page in Obsidian for the day's Daf with links to and text from some of those resources (see below). It introduces one command to the Command Palette: `Daf Yomi: Add Daf Yomi Page`. It will bring up a modal dialog asking for the date (with today's date filled in). It will then determine the Daf for that date and make a note with some resources filled in.
+There are a lot of resources to help with Daf Yomi including podcasts and commentaries. This plugin prepares a note page in Obsidian for the day's Daf with links to and text from some of those resources (see below). It introduces two commands to the Command Palette: `Daf Yomi: Add Daf Yomi page by date` and `Daf Yomi: Add Daf Yomi page by tractate/daf`.
 
-Currently, it will make a note page with the following (you can chose what you want from the plugin settings)...
+- By date: Enter the date and the plugin will determine the tractate and page (see Limitations below)
+- By tractate/daf: Enter the tractate name and the page number (daf). The values for the current date are already filled in. It's best to stick with the filled-in tractate as guessing the spelling of the name is difficult.
+
+Currently, the plugin will make a note page with the following (you can chose what you want from the plugin settings)...
 
 - Link to the day's PDF of the Koren Talmud Bavli by Steinsaltz from the [Steinsaltz Center](https://www.steinsaltz-center.org/home/doc.aspx?mCatID=68446).
 - Download the above PDF and insert it into the Obsidian note
@@ -38,6 +41,6 @@ I also expect things to go wrong on the first day of a new Tractate, as it's not
 The resources here are what I use. Again, open an issue or a pull request if you would like something to be added. If you want me to code it up, it may take me a few days to get to it.
 
 ## The code
-This is my first Obsidian plugin. I'm happy for people to look at my code and tell me how to do things better. I mostly followed [obsidian-pluck](https://github.com/kevboh/obsidian-pluck) as a nice example. The code to download and write PDFs was somewhat challenging to figure out. Everything happens in the `main.ts` file. 
+This is my first Obsidian plugin. I'm happy for people to look at my code and tell me how to do things better. I mostly followed [obsidian-pluck](https://github.com/kevboh/obsidian-pluck) as a nice example. The code to download and write PDFs was somewhat challenging to figure out. Everything happens in the `main.ts` file.
 
 

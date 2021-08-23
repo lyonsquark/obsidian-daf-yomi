@@ -12,22 +12,22 @@ interface DYSettings {
 }
 
 const DEFAULT_SETTINGS: DYSettings = {
-	dyDir: "/Home/Judiasm/Daf Yomi",
-	attachDir: "zzattachments",
-	sefaria: false,
-	stpdflink: true,
-	stpdf: false,
-	stc: true,
-	myjl: true
+	dyDir: "/Home/Judiasm/Daf Yomi",  // Directory for Daf Yomi notes
+	attachDir: "zzattachments",       // Attachments directory
+	sefaria: false,                   // Link to Sefaria?
+	stpdflink: true,                  // Link to Steinsaltz PDF?
+	stpdf: false,                     // Embed Steinsaltz PDF?
+	stc: true,                        // Link to Steinsaltz commentary?
+	myjl: true                        // Link to My Jewish Learning commentary?
 }
 
 // The tractate dates and names
 interface Tractate {
-	disp: string;
-	stpdf: string;
-	stc: string;
-	myjl: string;
-	sf: string;
+	disp: string;     // The display name of the tractate
+	stpdf: string;    // URL fragment for Steinsaltz PDF
+	stc: string;      // URL fragment for Steinsaltz commentary
+	myjl: string;     // URL fragment for My Jewish Learning commentary
+	sf: string;       // URL fragment for Sefaria
 };
 
 interface Daf {
@@ -44,14 +44,24 @@ export default class DafYomi extends Plugin {
 
 		await this.loadSettings();
 
-		// The command to add a Daf Yomi page
+		// The command to add a Daf Yomi page by date
 		this.addCommand({
-			id: 'dy-add-page',
-			name: 'Add Daf Yomi page',
+			id: 'dy-add-page-by-date',
+			name: 'Add Daf Yomi page by date',
 			callback: () => {
-				new DYModal(this.app, this).open();
+				new DYModalByDate(this.app, this).open();
 			}
 		});
+
+		// The command to add a Daf Yomi page by daf
+		this.addCommand({
+			id: 'dy-add-page-by-daf',
+			name: 'Add Daf Yomi page by tractate/daf',
+			callback: () => {
+				new DYModalByDaf(this.app, this).open();
+			}
+		});
+
 
 		// The settings tab
 		this.addSettingTab(new DYSettingTab(this.app, this));
@@ -62,7 +72,7 @@ export default class DafYomi extends Plugin {
 			"2022-01-24" : {disp:"Moed Katan", stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.'},
 			"2021-12-14" : {disp:"Megilah", stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.'},
 			"2021-11-14" : {disp:"Ta'anis", stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.' },
-			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', 						sf:'Rosh_Hashanah.'},
+			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.'},
 			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitzah/Beitzah_", stc:'beitza', myjl:"beitza-", sf:"Beitzah."},
 			"2021-07-09" : {disp: "Sukkah", stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.'},
 		};
@@ -70,16 +80,21 @@ export default class DafYomi extends Plugin {
 		console.log(this.settings);
 	}
 
-	// Add a Daf Yomi page (this is the part that does the actual work)
-	async addPage(dateS: string) {
+	// Add a Daf Yomi page by date
+	async addPageByDate(dateS: string) {
 		let dafDate = this.makeDate(dateS);
-		let daf     = this.findDaf(dafDate);
+		let daf = this.findDafByDate(dafDate);
 
 		if (!daf) {
 			new Notice("Date does not match a Daf", 5000);
 			return;
 		}
 
+		this.addPage(daf);
+	}
+
+	// Add the page
+	async addPage(daf: any) {
 		// Make the URLs
 		const urls = {
 			steinsaltz_pdf:  `https://www.steinsaltz-center.org/vault/DafYomi/${daf.tractate.stpdf}${daf.page}.pdf`,
@@ -175,7 +190,7 @@ export default class DafYomi extends Plugin {
 	}
 
 	// Find the daf for this date
-	findDaf(dafDate: Moment): Daf | undefined {
+	findDafByDate(dafDate: Moment): Daf | undefined {
 		let startDate: Moment | undefined = undefined;
 		let tractate:  Tractate | undefined = undefined;
 		for (const k in this.tractates ) {
@@ -197,6 +212,23 @@ export default class DafYomi extends Plugin {
 		return {tractate: tractate, page: page};
 	}
 
+	// Find daf by name
+	findDafByName(inTractate: string, inPage: number): Daf | undefined {
+		let tractate: Tractate | undefined = undefined;
+		for (const k in this.tractates) {
+			if (inTractate == this.tractates[k].disp) {
+				tractate = this.tractates[k];
+				break;
+			}
+		}
+
+		if (!tractate) {
+			return undefined;
+		}
+
+		return { tractate: tractate, page: inPage };
+	}
+
 	// Write the PDF file we downloaded
 	async writeSteinsaltzPDF(body: Blob, directoryName: string, tractate: string, page: number)  {
 		let pdfDir = this.settings.attachDir;
@@ -204,13 +236,13 @@ export default class DafYomi extends Plugin {
 			pdfDir = directoryName + '/' + this.settings.attachDir;
 		};
 		let pathName = `${pdfDir}/${tractate}_${page}.pdf`;
-		this.app.vault.adapter.writeBinary(pathName, await body.arrayBuffer() );
+		this.app.vault.createBinary(pathName, await body.arrayBuffer() );
 	}
 }
 
 
 // The Modal to ask for the date
-class DYModal extends Modal {
+class DYModalByDate extends Modal {
 	plugin: DafYomi;
 
 	constructor(app: App, plugin: DafYomi) {
@@ -225,7 +257,7 @@ class DYModal extends Modal {
 
 		const doAddPage = () => {
 			const dateS = dateField.getValue();
-			this.plugin.addPage(dateS);
+			this.plugin.addPageByDate(dateS);
 			this.close();
 		};
 
@@ -235,6 +267,60 @@ class DYModal extends Modal {
 		addPageButton.buttonEl.id = 'dy-add-page-button';
 		dateField.inputEl.focus();
 		dateField.inputEl.addEventListener("keypress", function (keypressed) {
+			if ( keypressed.key === "Enter") {
+				doAddPage();
+			}
+		});
+	}
+
+	onClose() {
+		let {contentEl} = this;
+		contentEl.empty();
+	}
+}
+
+// The Modal to ask for the tractate/daf
+class DYModalByDaf extends Modal {
+	plugin: DafYomi;
+
+	constructor(app: App, plugin: DafYomi) {
+		super(app);
+		this.plugin = plugin;
+	}
+
+	onOpen() {
+		const { contentEl } = this;
+
+		// What is the daf for today?
+		let today: Moment = window.moment()
+		let daf = this.plugin.findDafByDate(today)
+
+		const tractateField = new TextComponent(contentEl).setValue(`${daf.tractate.disp}`);
+		const pageField = new TextComponent(contentEl).setValue(`${daf.page}`);
+		tractateField.inputEl.id = "dy-tractate-input";
+		pageField.inputEl.id = "dy-page-input";
+
+		const doAddPage = () => {
+			const inTractate = tractateField.getValue();
+			const inPage = pageField.getValue();
+
+			let theDaf = this.plugin.findDafByName(inTractate, parseInt(inPage));
+
+			if (!theDaf) {
+				new Notice("Tractate is unknown", 5000);
+				return;
+			}
+
+			this.plugin.addPage(theDaf);
+			this.close();
+		};
+
+		const addPageButton = new ButtonComponent(contentEl)
+			.setButtonText("Add page")
+			.onClick(doAddPage);
+		addPageButton.buttonEl.id = 'dy-add-page-button';
+		pageField.inputEl.focus();
+		pageField.inputEl.addEventListener("keypress", function (keypressed) {
 			if ( keypressed.key === "Enter") {
 				doAddPage();
 			}
