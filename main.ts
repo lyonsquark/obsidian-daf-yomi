@@ -9,6 +9,7 @@ interface DYSettings {
 	stpdf: boolean;     // Download Steinsaltz PDF?
 	stc: boolean;       // Link to Steinsaltz commentary?
 	myjl: boolean;      // Link to My Jewish Learning commentary?
+	dydg: boolean   // Link to Daf Yomi Digest?
 }
 
 const DEFAULT_SETTINGS: DYSettings = {
@@ -18,7 +19,8 @@ const DEFAULT_SETTINGS: DYSettings = {
 	stpdflink: true,                  // Link to Steinsaltz PDF?
 	stpdf: false,                     // Embed Steinsaltz PDF?
 	stc: true,                        // Link to Steinsaltz commentary?
-	myjl: true                        // Link to My Jewish Learning commentary?
+	myjl: true,                       // Link to My Jewish Learning commentary?
+	dydg: false						  // Link to Daf Yomi Digest?
 }
 
 // The tractate dates and names
@@ -28,6 +30,7 @@ interface Tractate {
 	stc: string;      // URL fragment for Steinsaltz commentary
 	myjl: string;     // URL fragment for My Jewish Learning commentary
 	sf: string;       // URL fragment for Sefaria
+	dydg: string;     // URL fragment for Daf Yomi Digest
 };
 
 interface Daf {
@@ -68,13 +71,13 @@ export default class DafYomi extends Plugin {
 
 		// Make the tractates table
 		this.tractates = {
-			"2022-02-11" : {disp:"Chagigah", stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.'},
-			"2022-01-24" : {disp:"Moed Katan", stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.'},
-			"2021-12-14" : {disp:"Megilah", stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.'},
-			"2021-11-14" : {disp:"Ta'anis", stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.' },
-			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.'},
-			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitzah/Beitzah_", stc:'beitza', myjl:"beitza-", sf:"Beitzah."},
-			"2021-07-09" : {disp: "Sukkah", stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.'},
+			"2022-02-11" : {disp:"Chagigah", stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.', dydg:'Chagiga%20'},
+			"2022-01-24" : {disp:"Moed Katan", stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.', dydg:'MoedKatan%20'},
+			"2021-12-14" : {disp:"Megilah", stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.', dydg:'Megilla%20'},
+			"2021-11-14" : {disp:"Ta'anis", stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20' },
+			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20'},
+			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitzah/Beitzah_", stc:'beitza', myjl:"beitza-", sf:"Beitzah.", dydg:'Beitza%20'},
+			"2021-07-09" : {disp: "Sukkah", stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20'},
 		};
 
 		console.log(this.settings);
@@ -100,7 +103,8 @@ export default class DafYomi extends Plugin {
 			steinsaltz_pdf:  `https://www.steinsaltz-center.org/vault/DafYomi/${daf.tractate.stpdf}${daf.page}.pdf`,
 			steinsaltz_c:    `https://steinsaltz.org/daf/${daf.tractate.stc}${daf.page}`,
 			myjl:            `https://www.myjewishlearning.com/article/${daf.tractate.myjl}${daf.page}`,
-			sf:              `https://www.sefaria.org/${daf.tractate.sf}${daf.page}`
+			sf:              `https://www.sefaria.org/${daf.tractate.sf}${daf.page}`,
+			dydg:            `https://www.dafdigest.org/masechtos/${daf.tractate.dydg}${daf.page.toString().padStart(3, "0")}.pdf`
 		};
 
 		// Determine directory and page names
@@ -145,6 +149,9 @@ export default class DafYomi extends Plugin {
 
 		// Do we want the My Jewish Learning commentary?
 		if (this.settings.myjl) 		t += `[My Jewish Learning Commentary](${urls.myjl})\n`;
+
+		// Do we want Daf Yomi Digest?
+		if (this.settings.dydg)         t += `[Daf Yomi Digest](${urls.dydg})\n`;
 
 		t += '\n## Notes\n\n';
 
@@ -424,6 +431,18 @@ class DYSettingTab extends PluginSettingTab {
 			.setValue(this.plugin.settings.myjl)
 			.onChange(async (v) => {
 				this.plugin.settings.myjl = v;
+				this.display();
+				await this.plugin.saveSettings();
+			});
+		});
+
+		new Setting(containerEl)
+		.setName("Link to Daf Yomi Digest")
+		.setDesc("Add link to Daf Yomi Digest (Chicago Center for Torah & Chesed)")
+		.addToggle( t => { t
+			.setValue(this.plugin.settings.dydg)
+			.onChange(async (v) => {
+				this.plugin.settings.dydg = v;
 				this.display();
 				await this.plugin.saveSettings();
 			});

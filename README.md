@@ -18,6 +18,7 @@ Currently, the plugin will make a note page with the following (you can chose wh
 - Link to the Daf page in [Sefaria](https://www.sefaria.org/daf-yomi)
 - Link to the Steinsaltz commentary from the Steinsaltz Center
 - Link to the [My Jewish Learning](https://www.myjewishlearning.com/category/study/jewish-texts/talmud/) commentary
+- Link to the [Daf Yomi Digest](https://www.dafdigest.org)
 
 If you use any of the resources here, I'm sure the offering organization (e.g. Steinsaltz Center, Sefaria, My Jewish Learning) would appreciate a donation!
 
