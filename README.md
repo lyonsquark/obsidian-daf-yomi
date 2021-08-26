@@ -29,7 +29,7 @@ If you would like some other resource added, please open an issue or, even bette
 
 ## Settings
 
-Along with choosing which resources you want to include in your note, you also need to tell the plugin the directory of the Daf Yomi pages (and this directory must exist). The plugin will separate pages by tractate (e.g., if you specify `/Judiasm/Daf` as your directory, then the file for *Sukkah 18* will be `/Judiasm/Daf/Sukkah/Daf Yomi Sukkah 18.md`). The plugin will create the tractate directory as necessary.
+Along with choosing which resources you want to include in your note, you also need to tell the plugin the directory of the Daf Yomi pages (and this directory must exist). The plugin will separate pages by tractate (e.g., if you specify `/Judaism/Daf` as your directory, then the file for *Sukkah 18* will be `/Judaism/Daf/Sukkah/Daf Yomi Sukkah 18.md`). The plugin will create the tractate directory as necessary.
 
 As mentioned above, the plugin will also make a `/Judiasm/Daf/Sukkah/Tractate Sukkah` page with links to each Daf. You can add more info to this page, but keep in mind that the Daf links will be added to the end.
 
