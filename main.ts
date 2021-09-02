@@ -1,9 +1,15 @@
 import { App, ButtonComponent, Modal, Notice, Plugin, PluginSettingTab, Setting, TextComponent } from 'obsidian';
 import { Moment } from "moment";
 
+// Not in the API - see https://discord.com/channels/686053708261228577/840286264964022302/880329814731546634
+declare module "obsidian" {
+    interface Vault {
+        getConfig(option:"attachmentFolderPath"): string
+    }
+}
+
 interface DYSettings {
 	dyDir: string;      // Daf Yomi directory in Vault
-	attachDir: string;  // Attachments directory
 	sefaria: boolean;   // Link to Sefaria?
 	stpdflink: boolean; // Link to Steinsaltz PDF?
 	stpdf: boolean;     // Download Steinsaltz PDF?
@@ -15,7 +21,6 @@ interface DYSettings {
 
 const DEFAULT_SETTINGS: DYSettings = {
 	dyDir: "/Home/Judiasm/Daf Yomi",  // Directory for Daf Yomi notes
-	attachDir: "zzattachments",       // Attachments directory
 	sefaria: false,                   // Link to Sefaria?
 	stpdflink: true,                  // Link to Steinsaltz PDF?
 	stpdf: false,                     // Embed Steinsaltz PDF?
@@ -46,8 +51,6 @@ export default class DafYomi extends Plugin {
 	tractates: Record<string, Tractate>;
 
 	async onload() {
-		console.log('loading plugin');
-
 		await this.loadSettings();
 
 		// The command to add a Daf Yomi page by date
@@ -79,11 +82,9 @@ export default class DafYomi extends Plugin {
 			"2021-12-14" : {disp:"Megilah", stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.', dydg:'Megilla%20', hd:'UNKNOWN-'},
 			"2021-11-14" : {disp:"Ta'anis", stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'UNKNOWN-' },
 			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'UNKNOWN-'},
-			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitzah/Beitzah_", stc:'beitza', myjl:"beitza-", sf:"Beitzah.", dydg:'Beitza%20', hd:'UNKNOWN-'},
+			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitza_RH/Beitza_", stc:'beitza', myjl:"beitzah-", sf:"Beitzah.", dydg:'Beitza%20', hd:'beitzah-'},
 			"2021-07-09" : {disp: "Sukkah", stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20', hd:'sukkah-'},
 		};
-
-		console.log(this.settings);
 	}
 
 	// Add a Daf Yomi page by date
@@ -132,9 +133,6 @@ export default class DafYomi extends Plugin {
 		// Create the page
 		let t = `# ${pageName}\n\n`  // H1 title
 
-		// Do we want the Sefaria link?
-		if (this.settings.sefaria) 		t += `[Sefaria](${urls.sf})\n`;
-
 		// Do we want to download the Steinsaltz PDF page?
 		if (this.settings.stpdf) {
 			let url = urls.steinsaltz_pdf;
@@ -145,8 +143,11 @@ export default class DafYomi extends Plugin {
 			t += `![[${daf.tractate.disp}_${daf.page}.pdf]]\n`
 		}
 
-		// Do we want a link to the Steinsaltz PDF (not downloaded)
-		if (this.settings.stpdflink)	t += `[Steinsaltz PDF](${urls.steinsaltz_pdf})\n`;
+		// Do we want a link to the Steinsaltz PDF (not downloaded)?
+		if (this.settings.stpdflink) t += `[Steinsaltz PDF](${urls.steinsaltz_pdf})\n`;
+
+		// Do we want the Sefaria link?
+		if (this.settings.sefaria) 		t += `[Sefaria](${urls.sf})\n`;
 
 		// Do we want the Steinsaltz commentary?
 		if (this.settings.stc) 			t += `[Steinsaltz Commentary](${urls.steinsaltz_c})\n`;
@@ -184,7 +185,6 @@ export default class DafYomi extends Plugin {
 	}
 
 	onunload() {
-		console.log('unloading plugin');
 	}
 
 	async loadSettings() {
@@ -245,10 +245,28 @@ export default class DafYomi extends Plugin {
 
 	// Write the PDF file we downloaded
 	async writeSteinsaltzPDF(body: Blob, directoryName: string, tractate: string, page: number)  {
-		let pdfDir = this.settings.attachDir;
-		if ( pdfDir.charAt(0) != '/' ) {
-			pdfDir = directoryName + '/' + this.settings.attachDir;
+		let attachDir:string = this.app.vault.getConfig("attachmentFolderPath"); // Get attachment directory from Obsidian
+		let pdfDir:string = directoryName
+
+		if (attachDir == "/") {  // Top of the vault
+			pdfDir = ""     // Will get leading / from pathName (see below)
+		}
+		else if (attachDir == "./") {  // Current directory
+			pdfDir = directoryName
+		}
+		else if (attachDir.substring(0, 2) == "./" && attachDir.length > 2) { // Subdirectory of current
+			pdfDir = directoryName + "/" + attachDir.substring(2)
+
+			// Make directory?
+			if ( ! await this.app.vault.adapter.exists(pdfDir) ) {
+				await this.app.vault.adapter.mkdir(pdfDir);
+				new Notice(`Created attachments directory ${pdfDir}`);
+			};
+		}
+		else if (attachDir.substring(0, 1) != "/") {   // Absolute name
+			pdfDir = "/" + attachDir
 		};
+
 		let pathName = `${pdfDir}/${tractate}_${page}.pdf`;
 		this.app.vault.createBinary(pathName, await body.arrayBuffer() );
 	}
@@ -371,17 +389,6 @@ class DYSettingTab extends PluginSettingTab {
 					this.plugin.settings.dyDir = value;
 					await this.plugin.saveSettings();
 				}));
-
-		new Setting(containerEl)
-		.setName('Attachments directory')
-		.setDesc('Directory for PDF attachments (if relative, do not start with /)')
-		.addText(text => text
-			.setPlaceholder('Attachments directory')
-			.setValue(this.plugin.settings.attachDir)
-			.onChange(async (value) => {
-				this.plugin.settings.attachDir = value;
-				await this.plugin.saveSettings();
-			}));
 
 		new Setting(containerEl)
 			.setName("Link to Steinsaltz PDF")

@@ -33,8 +33,6 @@ Along with choosing which resources you want to include in your note, you also n
 
 As mentioned above, the plugin will also make a `/Judiasm/Daf/Sukkah/Tractate Sukkah` page with links to each Daf. You can add more info to this page, but keep in mind that the Daf links will be added to the end.
 
-If you want to download information (currently the only choice is the Koren Bavli page from the Steinsaltz Center), you also need to fill in the attachments directory (I'm not sure how to get this from Obsidian itself). If you use one directory for all of your attachments, use an absolute path (e.g. `/myattachments`). If you have an attachments directory in each of your directories (I do this), then give the directory name without a leading slash. The plugin will create this directory as necessary.
-
 ## Limitations
 Some resources are only available for today's Daf and a few weeks in the past. The plugin doesn't check if a link is actually available, so it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
 
