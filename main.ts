@@ -137,7 +137,7 @@ export default class DafYomi extends Plugin {
 
 		// Do we want to download the Steinsaltz PDF page?
 		if (this.settings.sections && (this.settings.stpdf || this.settings.stpdflink)) {
-			t += "## Koren Talmud Bavli\n\n";
+			t += "## Koren Talmud Bavli\n";
 		}
 
 		if (this.settings.stpdf) {
