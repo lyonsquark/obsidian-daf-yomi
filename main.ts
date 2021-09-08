@@ -10,6 +10,7 @@ declare module "obsidian" {
 
 interface DYSettings {
 	dyDir: string;      // Daf Yomi directory in Vault
+	sections: boolean;   // Make sections?
 	sefaria: boolean;   // Link to Sefaria?
 	stpdflink: boolean; // Link to Steinsaltz PDF?
 	stpdf: boolean;     // Download Steinsaltz PDF?
@@ -21,6 +22,7 @@ interface DYSettings {
 
 const DEFAULT_SETTINGS: DYSettings = {
 	dyDir: "/Home/Judiasm/Daf Yomi",  // Directory for Daf Yomi notes
+	sections: false,                  // Make sections?
 	sefaria: false,                   // Link to Sefaria?
 	stpdflink: true,                  // Link to Steinsaltz PDF?
 	stpdf: false,                     // Embed Steinsaltz PDF?
@@ -134,34 +136,63 @@ export default class DafYomi extends Plugin {
 		let t = `# ${pageName}\n\n`  // H1 title
 
 		// Do we want to download the Steinsaltz PDF page?
+		if (this.settings.sections && (this.settings.stpdf || this.settings.stpdflink)) {
+			t += "## Koren Talmud Bavli\n\n";
+		}
+
 		if (this.settings.stpdf) {
 			let url = urls.steinsaltz_pdf;
 			let r = new Request(url);
 			fetch(r).then( (r) => { return r.blob(); }).then(
 				     (b) => { this.writeSteinsaltzPDF(b, directoryName, daf.tractate.disp, daf.page); });
 
-			t += `![[${daf.tractate.disp}_${daf.page}.pdf]]\n`
+			t += `![[${daf.tractate.disp}_${daf.page}.pdf]]\n`;
 		}
 
 		// Do we want a link to the Steinsaltz PDF (not downloaded)?
 		if (this.settings.stpdflink) t += `[Steinsaltz PDF](${urls.steinsaltz_pdf})\n`;
 
+		if (this.settings.sections && (this.settings.stpdf || this.settings.stpdflink)) {
+			t += "\n";
+		}
+
 		// Do we want the Sefaria link?
-		if (this.settings.sefaria) 		t += `[Sefaria](${urls.sf})\n`;
+		if (this.settings.sefaria) {
+			if (this.settings.sections) t += "## Sefaria\n";
+			t += `[Sefaria](${urls.sf})\n`;
+			if (this.settings.sections) t += "\n";
+		}
 
 		// Do we want the Steinsaltz commentary?
-		if (this.settings.stc) 			t += `[Steinsaltz Commentary](${urls.steinsaltz_c})\n`;
+		if (this.settings.stc) {
+			if (this.settings.sections) t += "## Steinsaltz Commentary\n";
+			t += `[Steinsaltz Commentary](${urls.steinsaltz_c})\n`;
+			if (this.settings.sections) t += "\n";
+
+		}
 
 		// Do we want the My Jewish Learning commentary?
-		if (this.settings.myjl) 		t += `[My Jewish Learning Commentary](${urls.myjl})\n`;
+		if (this.settings.myjl) {
+			if (this.settings.sections) t += "## My Jewish Learning Commentary\n";
+			t += `[My Jewish Learning Commentary](${urls.myjl})\n`;
+			if (this.settings.sections) t += "\n";
+		}
 
 		// Do we want Daf Yomi Digest?
-		if (this.settings.dydg) t += `[Daf Yomi Digest](${urls.dydg})\n`;
+		if (this.settings.dydg) {
+			if (this.settings.sections) t += "## Daf Yomi Digest\n";
+			t += `[Daf Yomi Digest](${urls.dydg})\n`;
+			if (this.settings.sections) t += "\n";
+		}
 
 		// Do we want Hadran?
-		if (this.settings.hd) t += `[Hadran Commentary](${urls.hd})\n`;
+		if (this.settings.hd) {
+			if (this.settings.sections) t += "## Hadran Commentary\n";
+			t += `[Hadran Commentary](${urls.hd})\n`;
+			if (this.settings.sections) t += "\n";
+		}
 
-		t += '\n## Notes\n\n';
+		if ( ! this.settings.sections ) t += '\n## Notes\n\n';
 
 		// Write the page
 		await this.app.vault.create(pageFile, t);
@@ -389,6 +420,18 @@ class DYSettingTab extends PluginSettingTab {
 					this.plugin.settings.dyDir = value;
 					await this.plugin.saveSettings();
 				}));
+
+		new Setting(containerEl)
+		.setName("Make sections")
+		.setDesc("Put each link in its own section")
+		.addToggle( t => { t
+			.setValue(this.plugin.settings.sections)
+			.onChange(async (v) => {
+				this.plugin.settings.sections = v;
+				this.display();
+				await this.plugin.saveSettings();
+			});
+		});
 
 		new Setting(containerEl)
 			.setName("Link to Steinsaltz PDF")
