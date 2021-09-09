@@ -9,7 +9,9 @@ declare module "obsidian" {
 }
 
 interface DYSettings {
-	dyDir: string;      // Daf Yomi directory in Vault
+	dyDir: string;      // Daf Yomi directory template in vault
+	pageName: string;   // Page file name template
+	pageTitle: string;  // Page title template
 	sections: boolean;   // Make sections?
 	sefaria: boolean;   // Link to Sefaria?
 	stpdflink: boolean; // Link to Steinsaltz PDF?
@@ -21,7 +23,9 @@ interface DYSettings {
 }
 
 const DEFAULT_SETTINGS: DYSettings = {
-	dyDir: "/Home/Judiasm/Daf Yomi",  // Directory for Daf Yomi notes
+	dyDir: "/Home/Judiasm/Daf Yomi/{tractate}/{page}",  // Directory template for Daf Yomi notes
+	pageName: "Daf Yomi {tractate} {page}",  // Page file name template
+	pageTitle: "Daf Yomi {tractate} {page}",  // Page title template
 	sections: false,                  // Make sections?
 	sefaria: false,                   // Link to Sefaria?
 	stpdflink: true,                  // Link to Steinsaltz PDF?
@@ -35,6 +39,7 @@ const DEFAULT_SETTINGS: DYSettings = {
 // The tractate dates and names
 interface Tractate {
 	disp: string;     // The display name of the tractate
+	prakim: number[];  // The chapter (perek) breaks
 	stpdf: string;    // URL fragment for Steinsaltz PDF
 	stc: string;      // URL fragment for Steinsaltz commentary
 	myjl: string;     // URL fragment for My Jewish Learning commentary
@@ -78,14 +83,17 @@ export default class DafYomi extends Plugin {
 		this.addSettingTab(new DYSettingTab(this.app, this));
 
 		// Make the tractates table
+		// For the Prakim (chapters), If the a side is in the new chapter, then that daf is in the new chapter. Otherwise,
+		// that daf is in the old chapter and the next daf is in the new chapter.
+
 		this.tractates = {
-			"2022-02-11" : {disp:"Chagigah", stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'UNKNOWN-'},
-			"2022-01-24" : {disp:"Moed Katan", stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'UNKNOWN-'},
-			"2021-12-14" : {disp:"Megilah", stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.', dydg:'Megilla%20', hd:'UNKNOWN-'},
-			"2021-11-14" : {disp:"Ta'anis", stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'UNKNOWN-' },
-			"2021-10-11" : {disp:"Rosh Hashanah", stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'UNKNOWN-'},
-			"2021-09-02" : {disp: "Beitzah", stpdf:"Beitza_RH/Beitza_", stc:'beitza', myjl:"beitzah-", sf:"Beitzah.", dydg:'Beitza%20', hd:'beitzah-'},
-			"2021-07-09" : {disp: "Sukkah", stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20', hd:'sukkah-'},
+			"2022-02-11" : {disp:"Chagigah", prakim:[12, 21], stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'UNKNOWN-'},
+			"2022-01-24" : {disp:"Moed Katan", prakim:[12, 14], stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'UNKNOWN-'},
+			"2021-12-14" : {disp:"Megilah", prakim:[17, 21, 26], stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.', dydg:'Megilla%20', hd:'UNKNOWN-'},
+			"2021-11-14" : {disp:"Ta'anis", prakim:[15, 19, 26], stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'UNKNOWN-' },
+			"2021-10-11" : {disp:"Rosh Hashanah", prakim: [22, 26, 30], stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'UNKNOWN-'},
+			"2021-09-02" : {disp: "Beitzah", prakim: [16, 24, 30, 36], stpdf:"Beitza_RH/Beitza_", stc:'beitza', myjl:"beitzah-", sf:"Beitzah.", dydg:'Beitza%20', hd:'beitzah-'},
+			"2021-07-09" : {disp: "Sukkah", prakim: [21, 30, 43, 50], stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20', hd:'sukkah-'},
 		};
 	}
 
@@ -115,10 +123,27 @@ export default class DafYomi extends Plugin {
 		};
 
 		// Determine directory and page names
-		const baseDir = this.settings.dyDir;
-		const directoryName = `${baseDir}/${daf.tractate.disp}`;
-		const pageName = `Daf Yomi ${daf.tractate.disp} ${daf.page}`;
+		const dirTemplate = this.settings.dyDir;
+		const perek = this.findPerek(daf.page, daf.tractate.prakim)
+
+		// Deal with the directory template - the default
+		var directoryName = `${dirTemplate}/${daf.tractate.disp}`;
+
+		// Does the template have tractate?
+		if (dirTemplate.search(/{tractate}/i) >= 0) {
+			directoryName = this.fillInTemplate(dirTemplate, daf, perek);
+		}
+
+		// Deal with the page name
+		var pageName = `Daf Yomi ${daf.tractate.disp} ${daf.page}`;
+		if (this.settings.pageName.search(/{page}/i) >= 0) {
+			pageName = this.fillInTemplate(this.settings.pageName, daf, perek);
+		}
+
 		const pageFile = `${directoryName}/${pageName}.md`
+
+		// Deal with page title
+		var pageTitle = this.fillInTemplate(this.settings.pageTitle, daf, perek);
 
 		// Don't overwrite an old file
 		if (await this.app.vault.adapter.exists(pageFile)) {
@@ -132,8 +157,8 @@ export default class DafYomi extends Plugin {
 			new Notice(`Created directory ${directoryName}`);
 		};
 
-		// Create the page
-		let t = `# ${pageName}\n\n`  // H1 title
+		// Make the page
+		let t = `# ${pageTitle}\n\n`  // H1 title
 
 		// Do we want to download the Steinsaltz PDF page?
 		if (this.settings.sections && (this.settings.stpdf || this.settings.stpdflink)) {
@@ -199,7 +224,10 @@ export default class DafYomi extends Plugin {
 		new Notice(`Created note ${pageName}`);
 
 		// Add to the Tractate page
-		const tractatePage = `Tractate ${daf.tractate.disp}`;
+		var tractatePage = `Tractate ${daf.tractate.disp}`;
+		if (this.settings.dyDir.search(/{perek}/i) >= 0) {
+			tractatePage += ` Perek ${perek}`;
+		}
 		const tractateFile = `${directoryName}/${tractatePage}.md`;
 		const toAdd = `[[${pageName}|${daf.page}]]`;
 
@@ -232,6 +260,16 @@ export default class DafYomi extends Plugin {
 	// Take a string and turn it into a Moment date with UTC (to avoid time changes)
 	makeDate(dateS: string): Moment {
 		return window.moment(`${dateS}T00:00:00.000Z`);
+	}
+
+	// Find the Perek (Chapter)
+	findPerek(page: number, prakim: number[]): number {
+		let perek: number = 1;
+		for (var i = 0; i < prakim.length; ++i) {
+			if (page < prakim[i]) break;
+		}
+		perek = i + 1;
+		return perek;
 	}
 
 	// Find the daf for this date
@@ -272,6 +310,13 @@ export default class DafYomi extends Plugin {
 		}
 
 		return { tractate: tractate, page: inPage };
+	}
+
+	fillInTemplate(template: string, daf: Daf, perek: number) : string {
+		let name = template.replace(/{tractate}/gi, daf.tractate.disp);
+		name = name.replace(/{perek}/gi, `${perek}`);
+		name = name.replace(/{page}/gi, `${daf.page}`);
+		return name;
 	}
 
 	// Write the PDF file we downloaded
@@ -411,15 +456,41 @@ class DYSettingTab extends PluginSettingTab {
 		containerEl.createEl('p', {text: 'Daf Yomi settings'});
 
 		new Setting(containerEl)
-			.setName('Daf Yomi directory')
-			.setDesc('Directory in your Vault for Daf Yomi notes')
+			.setName('Daf Yomi directory template')
+			.setDesc('Directory in your Vault for Daf Yomi notes in the form of a template. Use {tractate} and {perek} for the tractate name and chapter (perek) number respectively. You must use {tractate} for uniqueness. {perek} is optional.')
 			.addText(text => text
-				.setPlaceholder('Daf Yomi directory')
+				.setPlaceholder('Daf Yomi directory template')
 				.setValue(this.plugin.settings.dyDir)
 				.onChange(async (value) => {
+					if ( value.search(/{page}/i) >= 0) {
+						new Notice("You must NOT have {page} in the directory template!", 5000)
+						return;
+					}
 					this.plugin.settings.dyDir = value;
 					await this.plugin.saveSettings();
 				}));
+
+		new Setting(containerEl)
+		.setName('Page file name template')
+		.setDesc('Template to use for the page file name (do NOT end in .md). Use {tractate}, {perek}, {page} for the tractate name, chapter (perek) number, and page number respectively. You must use {page} for uniqueness. {tractate} and {perek} are optional.')
+		.addText(text => text
+			.setPlaceholder('Daf Yomi page file name template')
+			.setValue(this.plugin.settings.pageName)
+			.onChange(async (value) => {
+				this.plugin.settings.pageName = value;
+				await this.plugin.saveSettings();
+			}));
+
+		new Setting(containerEl)
+		.setName('Page title template')
+		.setDesc('Template to use for the H1 title header of the page. Use {tractate}, {perek}, {page} for the tractate name, chapter (perek) number, and page number respectively. You likely should at least use {page}.')
+		.addText(text => text
+			.setPlaceholder('Daf Yomi directory template')
+			.setValue(this.plugin.settings.pageTitle)
+			.onChange(async (value) => {
+				this.plugin.settings.pageTitle = value;
+				await this.plugin.saveSettings();
+			}));
 
 		new Setting(containerEl)
 		.setName("Make sections")
