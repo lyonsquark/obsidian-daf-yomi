@@ -9,7 +9,7 @@ Compiled from 200-500 CE, the Talmud is the base of Rabbinic Judaism and Jewish 
 There are a lot of resources to help with Daf Yomi including podcasts and commentaries. This plugin prepares a note page in Obsidian for the day's Daf with links to and text from some of those resources (see below). It introduces two commands to the Command Palette: `Daf Yomi: Add Daf Yomi page by date` and `Daf Yomi: Add Daf Yomi page by tractate/daf`.
 
 - By date: Enter the date and the plugin will determine the tractate and page (see Limitations below)
-- By tractate/daf: Enter the tractate name and the page number (daf). The values for the current date are already filled in. It's best to stick with the filled-in tractate as guessing the spelling of the name is difficult.
+- By tractate/daf: Enter the tractate name and the page number (daf). The values for the current date are already filled in. It's best to stick with the filled-in tractate as guessing the spelling of the name is difficult (you need to look at the [code](https://github.com/lyonsquark/obsidian-daf-yomi/blob/74c4f7972287732cf8a2cf60bc3253cbe144a6e5/main.ts#L89) and the `disp` element).
 
 Currently, the plugin will make a note page with the following (you can chose what you want from the plugin settings)...
 
@@ -44,7 +44,7 @@ You can configure this plugin with several settings:
   - If you want pages like `Daf Yomi Sukkah 5.md` then enter anything without `{page}`.
   - If you want pages like `Sukkah_1_5.md` (1 is the chapter number) then enter `{tractate}_{perek}_{page}`
 
-- `Page title template` - This is a template to use for the H1 title heading of the page. It can by anything you want. You can specify `{tracate}`, `{perek}`, and `{page}` for the tractate name, perek (chapter) number, and page number respectively. Do **NOT** put `#` in the setting (the plugin will add that for you).
+- `Page title template` - This is a template to use for the H1 title heading of the page. It can be anything you want. You can specify `{tracate}`, `{perek}`, and `{page}` for the tractate name, perek (chapter) number, and page number respectively. Do **NOT** put `#` in the setting (the plugin will add that for you).
   - If you want something like `# Sukkah, Perek 1, Daf 5` then enter `{tractate}, Perek {perek}, Daf {page}`
   - If you want something like `# The awesome page 5 of Sukkah` then enter `The awesome page {page} of {tractate}`
 
