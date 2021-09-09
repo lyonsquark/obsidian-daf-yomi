@@ -29,9 +29,30 @@ If you would like some other resource added, please open an issue or, even bette
 
 ## Settings
 
-Along with choosing which resources you want to include in your note, you also need to tell the plugin the directory of the Daf Yomi pages (and this directory must exist). The plugin will separate pages by tractate (e.g., if you specify `/Judaism/Daf` as your directory, then the file for *Sukkah 18* will be `/Judaism/Daf/Sukkah/Daf Yomi Sukkah 18.md`). The plugin will create the tractate directory as necessary.
+**IMPORTANT:** The settings have changed in important ways at version 1.5. Please re-read this section.
 
-As mentioned above, the plugin will also make a `/Judiasm/Daf/Sukkah/Tractate Sukkah` page with links to each Daf. You can add more info to this page, but keep in mind that the Daf links will be added to the end.
+You can configure this plugin with several settings:
+
+- `Daf Yomi directory template` - This must contain the directory in your vault where Daf Yomi pages are to be stored. You can also specify `{tractate}` and `{perek}` for the tractate name and chapter (perek) number respectively. `{tractate}` is mandatory for uniqueness, and if you don't include it in the setting, then the template will not be filled in and you'll get `{tractate}` tacked on to the end silently. The plugin will create this directory as needed. Here are some examples:
+  - If you want the directory to be like */Judaism/Daf Yomi/Sukkah* then enter `/Judaism/Daf Yomi/{tractate}` or `/Judaism/Daf Yomi` (it will add the tractate automatically)
+  - If you want the directory to be like */Judaism/Daf Yomi/Tractate Sukkah* then enter `/Judaism/Daf Yomi/Tractate {tractate}`
+  - If you want the directory to be like */Judaism/Daf Yomi/Sukkah/Perek 3* (organize by Chapter) then enter `/Judaism/Daf Yomi/{tractate}/Perek {perek}`
+  - If you do the following: `/Judaism/Daf Yomi/{perek}` you'll get directories like */Judaism/Daf Yomi/{perek}/Sukkah* (`{perek}` will not be filled in). That's probably not what you want. Be sure to include `{tractate}` in the template to avoid this problem.
+
+- `Page file name template` - This is the template to use for the file name of the note for a Daf. You can specify `{tracate}`, `{perek}`, and `{page}` for the tractate name, perek (chapter) number, and page number respectively. `{page}` is mandatory for uniqueness, and if you don't include it in this setting, then the template will be ignored and you'll get `Daf Yomi {tractate} {page}`. Do **NOT** put `.md` in the setting. Here are some examples:
+  - If you want pages like `Sukkah 5.md` then enter `{tractate} {page}`
+  - If you want pages like `Daf Yomi Sukkah 5.md` then enter anything without `{page}`.
+  - If you want pages like `Sukkah_1_5.md` (1 is the chapter number) then enter `{tractate}_{perek}_{page}`
+
+- `Page title template` - This is a template to use for the H1 title heading of the page. It can by anything you want. You can specify `{tracate}`, `{perek}`, and `{page}` for the tractate name, perek (chapter) number, and page number respectively. Do **NOT** put `#` in the setting (the plugin will add that for you).
+  - If you want something like `# Sukkah, Perek 1, Daf 5` then enter `{tractate}, Perek {perek}, Daf {page}`
+  - If you want something like `# The awesome page 5 of Sukkah` then enter `The awesome page {page} of {tractate}`
+
+- `Make sections` (default not set) - If this is not set, then the resources will be listed in the note page, one line each. If this is set, then each resource will be in its own H2 subsection.
+
+- `Resources` - The subsequent settings are for choosing which resource links to add.
+
+As mentioned above, the plugin will also make a page like `/Judiasm/Daf/Sukkah/Tractate Sukkah` (perek is added if necessary) with links to each Daf. You can add more info to this page, but keep in mind that the Daf links will be added to the end.
 
 ## Limitations
 Some resources are only available for today's Daf and a few weeks in the past. The plugin doesn't check if a link is actually available, so it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
