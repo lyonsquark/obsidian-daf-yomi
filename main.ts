@@ -91,7 +91,7 @@ export default class DafYomi extends Plugin {
 			"2022-01-24" : {disp:"Moed Katan", prakim:[12, 14], stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'UNKNOWN-'},
 			"2021-12-14" : {disp:"Megilah", prakim:[17, 21, 26], stpdf:"Megilah/Megilah_", stc:'megila', myjl:'megila-', sf:'Megillah.', dydg:'Megilla%20', hd:'UNKNOWN-'},
 			"2021-11-14" : {disp:"Ta'anis", prakim:[15, 19, 26], stpdf:"Tannis/Tannis_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'UNKNOWN-' },
-			"2021-10-11" : {disp:"Rosh Hashanah", prakim: [22, 26, 30], stpdf:"RoshHashanah/RoshHashanah_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'UNKNOWN-'},
+			"2021-10-11" : {disp:"Rosh Hashanah", prakim: [22, 26, 30], stpdf:"Beitza_RH/RoshHaShana_", stc:'roshhashana', myjl:'roshhashana-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'rosh-hashanah-'},
 			"2021-09-02" : {disp: "Beitzah", prakim: [16, 24, 30, 36], stpdf:"Beitza_RH/Beitza_", stc:'beitza', myjl:"beitzah-", sf:"Beitzah.", dydg:'Beitza%20', hd:'beitzah-'},
 			"2021-07-09" : {disp: "Sukkah", prakim: [21, 30, 43, 50], stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20', hd:'sukkah-'},
 		};
