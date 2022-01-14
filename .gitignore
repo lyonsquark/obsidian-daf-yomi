@@ -9,3 +9,6 @@ node_modules
 
 # obsidian
 data.json
+
+# private scripts
+copyFiles.sh
