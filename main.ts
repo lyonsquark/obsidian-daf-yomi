@@ -88,7 +88,7 @@ export default class DafYomi extends Plugin {
 
 		this.tractates = {
 			"2022-02-11" : {disp:"Chagigah", prakim:[12, 21], stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'UNKNOWN-'},
-			"2022-01-24" : {disp:"Moed Katan", prakim:[12, 14], stpdf:"MoedKatan/MoedKatan_", stc:'moed', myjl:'moed-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'UNKNOWN-'},
+			"2022-01-14" : {disp:"Moed Katan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-'},
 			"2021-12-14" : {disp:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', 	 myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-'},
 			"2021-11-14" : {disp:"Ta'anis", prakim:[15, 19, 26], stpdf:"Taanit/Taanit_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'taanit-' },
 			"2021-10-11" : {disp:"Rosh Hashanah", prakim: [22, 26, 30], stpdf:"Beitza_RH/RoshHaShana_", stc:'roshhashana', myjl:'rosh-hashanah-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'rosh-hashanah-'},
