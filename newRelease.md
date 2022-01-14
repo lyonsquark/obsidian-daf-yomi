@@ -13,7 +13,5 @@ How to make a new release (notes for Adam in case I forget).
 - Build again with `npm run dev`
 - Commit and Push changes to GitHub
 - Close the issue in GitHub
-- On GitHub, go to Releases and click "Draft a new release"
-  - Put the version # in as the "Choose tag"
-  - Upload `main.js`, `manifest.json` and `styles.css` to the release.
-- Release it
+- Add a tag with, for example, `git tag -a 1.8.1 -m "1.8.1" ; git push origin 1.8.1`
+- The workflow will make the release. Edit the release notes after the fact.
