@@ -13,6 +13,7 @@ interface DYSettings {
 	pageName: string;   // Page file name template
 	pageTitle: string;  // Page title template
 	sections: boolean;   // Make sections?
+	litLinks: boolean;   // Make Literature Note links
 	sefaria: boolean;   // Link to Sefaria?
 	stpdflink: boolean; // Link to Steinsaltz PDF?
 	stpdf: boolean;     // Download Steinsaltz PDF?
@@ -27,6 +28,7 @@ const DEFAULT_SETTINGS: DYSettings = {
 	pageName: "Daf Yomi {tractate} {page}",  // Page file name template
 	pageTitle: "Daf Yomi {tractate} {page}",  // Page title template
 	sections: false,                  // Make sections?
+	litLinks: false,                  // Make literature note links
 	sefaria: false,                   // Link to Sefaria?
 	stpdflink: true,                  // Link to Steinsaltz PDF?
 	stpdf: false,                     // Embed Steinsaltz PDF?
@@ -39,6 +41,7 @@ const DEFAULT_SETTINGS: DYSettings = {
 // The tractate dates and names
 interface Tractate {
 	disp: string;     // The display name of the tractate
+	linkName: string;  /// The name of the tractate for a link (no spaces)
 	prakim: number[];  // The chapter (perek) breaks
 	stpdf: string;    // URL fragment for Steinsaltz PDF
 	stc: string;      // URL fragment for Steinsaltz commentary
@@ -208,6 +211,7 @@ export default class DafYomi extends Plugin {
 		if (this.settings.myjl) {
 			if (this.settings.sections) t += "## My Jewish Learning Commentary\n";
 			t += `[My Jewish Learning Commentary](${urls.myjl})\n`;
+			if (this.settings.sections && this.settings.litLinks) {
 			if (this.settings.sections) t += "\n";
 		}
 
