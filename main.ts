@@ -90,13 +90,9 @@ export default class DafYomi extends Plugin {
 		// that daf is in the old chapter and the next daf is in the new chapter.
 
 		this.tractates = {
-			"2022-02-11" : {disp:"Chagigah", prakim:[12, 21], stpdf:"Chagigah/Chagigah_", stc:"hagiga", myjl:'hagiga-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'UNKNOWN-'},
-			"2022-01-14" : {disp:"Moed Katan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-'},
-			"2021-12-14" : {disp:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', 	 myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-'},
-			"2021-11-14" : {disp:"Ta'anis", prakim:[15, 19, 26], stpdf:"Taanit/Taanit_", stc:'taanit', myjl:'taanit-', sf: 'Taanit.', dydg:'Taanis%20', hd:'taanit-' },
-			"2021-10-11" : {disp:"Rosh Hashanah", prakim: [22, 26, 30], stpdf:"Beitza_RH/RoshHaShana_", stc:'roshhashana', myjl:'rosh-hashanah-', sf:'Rosh_Hashanah.', dydg:'RoshHaShana%20', hd:'rosh-hashanah-'},
-			"2021-09-02" : {disp: "Beitzah", prakim: [16, 24, 30, 36], stpdf:"Beitza_RH/Beitza_", stc:'beitza', myjl:"beitzah-", sf:"Beitzah.", dydg:'Beitza%20', hd:'beitzah-'},
-			"2021-07-09" : {disp: "Sukkah", prakim: [21, 30, 43, 50], stpdf:"Sukka/Sukkah_", stc:'sukka', myjl:'sukkah-', sf:'Sukkah.', dydg:'Sukkah%20', hd:'sukkah-'},
+			"2022-02-11" : {disp:"Chagigah", linkName:"Chagigah", prakim:[12, 21], stpdf:"Hagiga/Hagiga_", stc:"hagiga", myjl:'chagigah-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'chagigah-'},
+			"2022-01-14" : {disp:"Moed Katan", linkName:"MoedKatan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-'},
+			"2021-12-14" : {disp:"Megillah", linkName:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-'},
 		};
 	}
 
