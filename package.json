@@ -1,6 +1,6 @@
 {
   "name": "obsidian-daf-yomi",
-  "version": "1.9",
+  "version": "1.10",
   "description": "Fill in Daf Yomi pages",
   "main": "main.js",
   "scripts": {
