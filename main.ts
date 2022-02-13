@@ -523,6 +523,19 @@ class DYSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
+		.setName("Make Literature note links")
+		.setDesc("Add a link to a literature note")
+		.addToggle( t => { t
+			.setValue(this.plugin.settings.litLinks)
+			.onChange(async (v) => {
+				this.plugin.settings.litLinks = v;
+				this.display();
+				await this.plugin.saveSettings();
+			});
+		});
+
+
+		new Setting(containerEl)
 			.setName("Link to Steinsaltz PDF")
 			.setDesc("Add link to Steinsaltz PDF")
 			.addToggle( t => { t
