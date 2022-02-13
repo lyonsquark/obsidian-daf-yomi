@@ -213,6 +213,7 @@ export default class DafYomi extends Plugin {
 			t += `[My Jewish Learning Commentary](${urls.myjl})\n`;
 			if (this.settings.sections && this.settings.litLinks) {
 				t += `See [[Notes/Literature/@MJL-${daf.tractate.linkName}${daf.page}]]\n`
+			}
 			if (this.settings.sections) t += "\n";
 		}
 
@@ -254,7 +255,10 @@ export default class DafYomi extends Plugin {
 			await this.app.vault.adapter.write(tractateFile, current + " " + toAdd);
 			new Notice(`Added to note ${tractatePage}`);
 		}
+
 		// Open the new page
+		let leaf = this.app.workspace.getUnpinnedLeaf();
+		await leaf.openFile(dafPage, { active: true });
 	}
 
 	onunload() {
