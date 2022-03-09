@@ -15,6 +15,7 @@
         "hashanah",
         "Hashanah",
         "Katan",
+        "Ketubot",
         "keypressed",
         "Koren",
         "megila",
@@ -37,6 +38,8 @@
         "taanit",
         "Taanit",
         "tractates",
+        "Yevamos",
+        "yevamot",
         "Yomi"
     ]
 }

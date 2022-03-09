@@ -86,10 +86,12 @@ export default class DafYomi extends Plugin {
 		this.addSettingTab(new DYSettingTab(this.app, this));
 
 		// Make the tractates table
-		// For the Prakim (chapters), If the a side is in the new chapter, then that daf is in the new chapter. Otherwise,
+		// For the Prakim (chapters) look at Sefaria, If the a side is in the new chapter, then that daf is in the new chapter. Otherwise,
 		// that daf is in the old chapter and the next daf is in the new chapter.
 
 		this.tractates = {
+			"2022-07-08" : {disp:"Ketubot", linkName:"Ketubot", prakim:[16, 29, 42, 55, 66, 70, 78, 83, 90, 96, 102, 105], stpdf:"Ketubot/Ketubot_", stc:"ketubot", myjl:"ketubot-", sf:"Ketubot.", dydg:"Ketubot%20", hd:"ketubot-"},
+			"2022-03-09" : {disp:"Yevamot", linkName:"Yevamot", prakim:[17, 26, 36, 50, 54, 66, 70, 84, 88, 97, 101, 107, 113, 115, 119], stpdf:"Yevamot/Yevamot_", stc:"yevamot", myjl:"yevamot-", sf:"Yevamot.", dydg:"Yevamos%20", hd:"yevamot-"},
 			"2022-02-11" : {disp:"Chagigah", linkName:"Chagigah", prakim:[12, 21], stpdf:"Hagiga/Hagiga_", stc:"hagiga", myjl:'chagigah-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'chagigah-'},
 			"2022-01-14" : {disp:"Moed Katan", linkName:"MoedKatan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-'},
 			"2021-12-14" : {disp:"Megillah", linkName:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-'},
