@@ -21,6 +21,7 @@ interface DYSettings {
 	myjl: boolean;      // Link to My Jewish Learning commentary?
 	dydg: boolean;      // Link to Daf Yomi Digest?
 	hd: boolean;        // Link to Hadran?
+	lgg: boolean;       // Link to Living Greengrass
 }
 
 const DEFAULT_SETTINGS: DYSettings = {
@@ -35,11 +36,13 @@ const DEFAULT_SETTINGS: DYSettings = {
 	stc: true,                        // Link to Steinsaltz commentary?
 	myjl: true,                       // Link to My Jewish Learning commentary?
 	dydg: false,			     	  // Link to Daf Yomi Digest?
-	hd:false                          // Link to Hadran?
+	hd:false,                         // Link to Hadran?
+	lgg:false                         // Link to Living Greengrass
 }
 
 // The tractate dates and names
 interface Tractate {
+	startDate: Moment;  // The start date for the tractate
 	disp: string;     // The display name of the tractate
 	linkName: string;  /// The name of the tractate for a link (no spaces)
 	prakim: number[];  // The chapter (perek) breaks
@@ -49,6 +52,7 @@ interface Tractate {
 	sf: string;       // URL fragment for Sefaria
 	dydg: string;     // URL fragment for Daf Yomi Digest
 	hd: string;       // URL fragment for Hadran
+	lgg: string;      // URL fragment for Living Greengrass
 };
 
 interface Daf {
@@ -81,7 +85,6 @@ export default class DafYomi extends Plugin {
 			}
 		});
 
-
 		// The settings tab
 		this.addSettingTab(new DYSettingTab(this.app, this));
 
@@ -90,13 +93,13 @@ export default class DafYomi extends Plugin {
 		// that daf is in the old chapter and the next daf is in the new chapter.
 
 		this.tractates = {
-			"2023-01-25" : {disp:"Nazir", linkName:"Nazir", prakim:[9, 16, 21, 31, 34, 47, 57, 61], stpdf:"Nazir/Nazir_", stc:"nazir", myjl:"nazir-", sf:"Nazir.", dydg:"Nazir%20", hd:"nazir-"},
-			"2022-10-27" : {disp:"Nedarim", linkName:"Nedarim", prakim:[14, 21, 33, 46, 49, 54, 60, 67, 79], stpdf:"Nedarim/Nedarim_", stc:"nedarim", myjl:"nedarim-", sf:"Nedarim.", dydg:"Nedarim%20", hd:"nedarim-"},
-			"2022-07-08" : {disp:"Ketubot", linkName:"Ketubot", prakim:[16, 29, 42, 55, 66, 70, 78, 83, 90, 96, 102, 105], stpdf:"Ketubot/Ketubot_", stc:"ketubot", myjl:"ketubot-", sf:"Ketubot.", dydg:"Kesuvos%20", hd:"ketubot-"},
-			"2022-03-09" : {disp:"Yevamot", linkName:"Yevamot", prakim:[17, 26, 36, 50, 54, 66, 70, 84, 88, 97, 101, 107, 113, 115, 119], stpdf:"Yevamot/Yevamot_", stc:"yevamot", myjl:"yevamot-", sf:"Yevamot.", dydg:"Yevamos%20", hd:"yevamot-"},
-			"2022-02-11" : {disp:"Chagigah", linkName:"Chagigah", prakim:[12, 21], stpdf:"Hagiga/Hagiga_", stc:"hagiga", myjl:'chagigah-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'chagigah-'},
-			"2022-01-14" : {disp:"Moed Katan", linkName:"MoedKatan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-'},
-			"2021-12-14" : {disp:"Megillah", linkName:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-'},
+			"2023-01-25" : {startDate:this.makeDate("2023-01-25"), disp:"Nazir", linkName:"Nazir", prakim:[9, 16, 21, 31, 34, 47, 57, 61], stpdf:"Nazir/Nazir_", stc:"nazir", myjl:"nazir-", sf:"Nazir.", dydg:"Nazir%20", hd:"nazir-", lgg:'nazir-'},
+			"2022-10-27" : {startDate:this.makeDate("2022-10-27"), disp:"Nedarim", linkName:"Nedarim", prakim:[14, 21, 33, 46, 49, 54, 60, 67, 79], stpdf:"Nedarim/Nedarim_", stc:"nedarim", myjl:"nedarim-", sf:"Nedarim.", dydg:"Nedarim%20", hd:"nedarim-", lgg:'nedarim-'},
+			"2022-07-08" : {startDate:this.makeDate("2022-07-08"), disp:"Ketubot", linkName:"Ketubot", prakim:[16, 29, 42, 55, 66, 70, 78, 83, 90, 96, 102, 105], stpdf:"Ketubot/Ketubot_", stc:"ketubot", myjl:"ketubot-", sf:"Ketubot.", dydg:"Kesuvos%20", hd:"ketubot-", lgg:'ketubot-'},
+			"2022-03-09" : {startDate:this.makeDate("2022-03-09"), disp:"Yevamot", linkName:"Yevamot", prakim:[17, 26, 36, 50, 54, 66, 70, 84, 88, 97, 101, 107, 113, 115, 119], stpdf:"Yevamot/Yevamot_", stc:"yevamot", myjl:"yevamot-", sf:"Yevamot.", dydg:"Yevamos%20", hd:"yevamot-", lgg:'yevamot-'},
+			"2022-02-11" : {startDate:this.makeDate("2022-02-11"), disp:"Chagigah", linkName:"Chagigah", prakim:[12, 21], stpdf:"Hagiga/Hagiga_", stc:"hagiga", myjl:'chagigah-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'chagigah-', lgg:'chagigah-'},
+			"2022-01-14" : {startDate:this.makeDate("2022-01-14"), disp:"Moed Katan", linkName:"MoedKatan", prakim:[12, 14], stpdf:"Moed/Moed_", stc:'moed', myjl:'moed-katan-', sf:'Moed_Katan.', dydg:'MoedKatan%20', hd:'moed-katan-', lgg:'moed-katan-'},
+			"2021-12-14" : {startDate:this.makeDate("2021-12-14"), disp:"Megillah", linkName:"Megillah", prakim:[17, 21, 26], stpdf:"megilla/Megilla_", stc:'megilla', myjl:'megillah-', sf:'Megillah.', dydg:'Megilla%20', hd:'megillah-', lgg:'megillah-'},
 		};
 	}
 
@@ -130,7 +133,8 @@ export default class DafYomi extends Plugin {
 			myjl:            `https://www.myjewishlearning.com/article/${daf.tractate.myjl}${daf.page}`,
 			sf:              `https://www.sefaria.org/${daf.tractate.sf}${daf.page}`,
 			dydg:            `https://www.dafdigest.org/masechtos/${daf.tractate.dydg}${daf.page.toString().padStart(3, "0")}.pdf`,
-			hd:              `https://hadran.org.il/daf/${daf.tractate.hd}${daf.page}`
+			hd:              `https://hadran.org.il/daf/${daf.tractate.hd}${daf.page}`,
+			lgg:             `https://livinggreengrass.home.blog/${this.dateForDafForLGG(daf.tractate, daf.page)}/${daf.tractate.lgg}${daf.page}/`
 		};
 
 		// Determine directory and page names
@@ -231,6 +235,13 @@ export default class DafYomi extends Plugin {
 			if (this.settings.sections) t += "\n";
 		}
 
+		// Do we want Living Greengrass?
+		if (this.settings.lgg) {
+			if (this.settings.sections) t += "## Living Greengrass\n";
+			t += `[Living Greengrass](${urls.lgg})\n`;
+			if (this.settings.sections) t += "\n";
+		}
+
 		if ( ! this.settings.sections ) t += '\n## Notes\n\n';
 
 		// Write the page
@@ -288,6 +299,12 @@ export default class DafYomi extends Plugin {
 		}
 		perek = i + 1;
 		return perek;
+	}
+
+	// Find the date for a particular daf
+	dateForDafForLGG(daf: Tractate, inPage: number): string {
+		let dafDate = daf.startDate.add(inPage-1, 'days');
+		return dafDate.format('YYYY/MM/DD');
 	}
 
 	// Find the daf for this date
@@ -365,7 +382,6 @@ export default class DafYomi extends Plugin {
 		this.app.vault.createBinary(pathName, await body.arrayBuffer() );
 	}
 }
-
 
 // The Modal to ask for the date
 class DYModalByDate extends Modal {
@@ -614,6 +630,18 @@ class DYSettingTab extends PluginSettingTab {
 			.setValue(this.plugin.settings.hd)
 			.onChange(async (v) => {
 				this.plugin.settings.hd = v;
+				this.display();
+				await this.plugin.saveSettings();
+			});
+		});
+
+		new Setting(containerEl)
+		.setName("Link to Living Greengrass blog")
+		.setDesc("Add link to Living Greengrass blog")
+		.addToggle( t => { t
+			.setValue(this.plugin.settings.lgg)
+			.onChange(async (v) => {
+				this.plugin.settings.lgg = v;
 				this.display();
 				await this.plugin.saveSettings();
 			});

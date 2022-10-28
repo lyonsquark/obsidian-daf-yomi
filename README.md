@@ -20,6 +20,9 @@ Currently, the plugin will make a note page with the following (you can chose wh
 - Link to the [My Jewish Learning](https://www.myjewishlearning.com/category/study/jewish-texts/talmud/) commentary
 - Link to the [Daf Yomi Digest](https://www.dafdigest.org)
 - Link to the [Hadran](https://hadran.org.il) commentary
+- Link to the [Living Greengrass](https://livinggreengrass.home.blog) blog
+
+Note that the plugin does not check if the links actually work. You may need to check back later in the day if a commentary or post is not yet available. 
 
 If you use any of the resources here, I'm sure the offering organization (e.g. Steinsaltz Center, Sefaria, My Jewish Learning) would appreciate a donation!
 
@@ -55,7 +58,7 @@ You can configure this plugin with several settings:
 As mentioned above, the plugin will also make a page like `/Judiasm/Daf/Sukkah/Tractate Sukkah` (perek is added if necessary) with links to each Daf. You can add more info to this page, but keep in mind that the Daf links will be added to the end.
 
 ## Limitations
-Some resources are only available for today's Daf and a few weeks in the past. The plugin doesn't check if a link is actually available, so it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
+Some resources are only available for today's Daf and a few weeks in the past. **The plugin doesn't check if a link is actually available**, so it's best to pick a date that is the current day or up to a couple of weeks in the past. Future dates likely won't work.
 
 I also expect things to go wrong on the first day of a new Tractate, as it's not clear how some sites will name their links until that day comes. I will try to make fixes and a new release on such days.
 
