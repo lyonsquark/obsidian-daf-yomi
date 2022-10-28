@@ -90,6 +90,8 @@ export default class DafYomi extends Plugin {
 		// that daf is in the old chapter and the next daf is in the new chapter.
 
 		this.tractates = {
+			"2023-01-25" : {disp:"Nazir", linkName:"Nazir", prakim:[9, 16, 21, 31, 34, 47, 57, 61], stpdf:"Nazir/Nazir_", stc:"nazir", myjl:"nazir-", sf:"Nazir.", dydg:"Nazir%20", hd:"nazir-"},
+			"2022-10-27" : {disp:"Nedarim", linkName:"Nedarim", prakim:[14, 21, 33, 46, 49, 54, 60, 67, 79], stpdf:"Nedarim/Nedarim_", stc:"nedarim", myjl:"nedarim-", sf:"Nedarim.", dydg:"Nedarim%20", hd:"nedarim-"},
 			"2022-07-08" : {disp:"Ketubot", linkName:"Ketubot", prakim:[16, 29, 42, 55, 66, 70, 78, 83, 90, 96, 102, 105], stpdf:"Ketubot/Ketubot_", stc:"ketubot", myjl:"ketubot-", sf:"Ketubot.", dydg:"Kesuvos%20", hd:"ketubot-"},
 			"2022-03-09" : {disp:"Yevamot", linkName:"Yevamot", prakim:[17, 26, 36, 50, 54, 66, 70, 84, 88, 97, 101, 107, 113, 115, 119], stpdf:"Yevamot/Yevamot_", stc:"yevamot", myjl:"yevamot-", sf:"Yevamot.", dydg:"Yevamos%20", hd:"yevamot-"},
 			"2022-02-11" : {disp:"Chagigah", linkName:"Chagigah", prakim:[12, 21], stpdf:"Hagiga/Hagiga_", stc:"hagiga", myjl:'chagigah-', sf:'Chagigah.', dydg:'Chagiga%20', hd:'chagigah-'},
