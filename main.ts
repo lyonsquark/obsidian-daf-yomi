@@ -1,4 +1,4 @@
-import { App, ButtonComponent, Modal, Notice, Plugin, PluginSettingTab, Setting, TextComponent } from 'obsidian';
+import { App, ButtonComponent, DropdownComponent, Modal, Notice, Plugin, PluginSettingTab, Setting, TextComponent } from 'obsidian';
 import { Moment } from "moment";
 
 // Not in the API - see https://discord.com/channels/686053708261228577/840286264964022302/880329814731546634
@@ -307,6 +307,7 @@ export default class DafYomi extends Plugin {
 		return dafDate.format('YYYY/MM/DD');
 	}
 
+
 	// Find the daf for this date
 	findDafByDate(dafDate: Moment): Daf | undefined {
 		let startDate: Moment | undefined = undefined;
@@ -437,9 +438,16 @@ class DYModalByDaf extends Modal {
 		let today: Moment = window.moment()
 		let daf = this.plugin.findDafByDate(today)
 
-		const tractateField = new TextComponent(contentEl).setValue(`${daf.tractate.disp}`);
+		// Make a dropdown list
+		let tractateField = new DropdownComponent(contentEl);
+		for (const k in this.plugin.tractates ) {
+			const tractateDisp = this.plugin.tractates[k].disp;
+			tractateField.addOption( tractateDisp, tractateDisp );
+		}
+		tractateField.setValue(`${daf.tractate.disp}`)
+
 		const pageField = new TextComponent(contentEl).setValue(`${daf.page}`);
-		tractateField.inputEl.id = "dy-tractate-input";
+		tractateField.selectEl.id = "dy-tractate-input";
 		pageField.inputEl.id = "dy-page-input";
 
 		const doAddPage = () => {

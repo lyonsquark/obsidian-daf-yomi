@@ -9,7 +9,7 @@ Compiled from 200-500 CE, the Talmud is the base of Rabbinic Judaism and Jewish 
 There are a lot of resources to help with Daf Yomi including podcasts and commentaries. This plugin prepares a note page in Obsidian for the day's Daf with links to and text from some of those resources (see below). It introduces two commands to the Command Palette: `Daf Yomi: Add Daf Yomi page by date` and `Daf Yomi: Add Daf Yomi page by tractate/daf`.
 
 - By date: Enter the date and the plugin will determine the tractate and page (see Limitations below)
-- By tractate/daf: Enter the tractate name and the page number (daf). The values for the current date are already filled in. It's best to stick with the filled-in tractate as guessing the spelling of the name is difficult (you need to look at the [code](https://github.com/lyonsquark/obsidian-daf-yomi/blob/74c4f7972287732cf8a2cf60bc3253cbe144a6e5/main.ts#L89) and the `disp` element).
+- By tractate/daf: Choose the tractate name from the drop down list and enter the page number (daf). The values for the current date are already filled in. If the tractate you want is not in the drop down list, please open an issue. 
 
 Currently, the plugin will make a note page with the following (you can chose what you want from the plugin settings)...
 
