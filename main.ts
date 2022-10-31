@@ -303,7 +303,8 @@ export default class DafYomi extends Plugin {
 
 	// Find the date for a particular daf
 	dateForDafForLGG(daf: Tractate, inPage: number): string {
-		let dafDate = daf.startDate.add(inPage-1, 'days');
+		// Note that moment.js mutates the original object, use clone(). See https://github.com/moment/moment/issues/955
+		let dafDate = daf.startDate.clone().add(inPage-1, 'days');
 		return dafDate.format('YYYY/MM/DD');
 	}
 
