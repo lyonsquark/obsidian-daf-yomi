@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-daf-yomi",
 	"name": "Daf Yomi",
-	"version": "1.15.0",
+	"version": "1.15.1",
 	"minAppVersion": "0.9.12",
 	"description": "Fill in Daf Yomi pages",
 	"author": "Adam Lyon",
