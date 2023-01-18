@@ -288,7 +288,9 @@ export default class DafYomi extends Plugin {
 
 	// Take a string and turn it into a Moment date with UTC (to avoid time changes)
 	makeDate(dateS: string): Moment {
-		return window.moment(`${dateS}T00:00:00.000Z`);
+		let theDate = window.moment.utc(`${dateS}T00:00:00.000Z`);  // Kept having nagging date problems - added .utc to fix
+		// console.log(`makeDate: ${dateS} ${theDate}`)
+		return theDate;
 	}
 
 	// Find the Perek (Chapter)
@@ -304,7 +306,7 @@ export default class DafYomi extends Plugin {
 	// Find the date for a particular daf
 	dateForDafForLGG(daf: Tractate, inPage: number): string {
 		// Note that moment.js mutates the original object, use clone(). See https://github.com/moment/moment/issues/955
-		let dafDate = daf.startDate.clone().add(inPage-1, 'days');
+		let dafDate = daf.startDate.clone().add(inPage-2, 'days');
 		return dafDate.format('YYYY/MM/DD');
 	}
 
@@ -436,7 +438,8 @@ class DYModalByDaf extends Modal {
 		const { contentEl } = this;
 
 		// What is the daf for today?
-		let today: Moment = window.moment()
+		let todayS: string = window.moment().format("YYYY-MM-DD")  // Drop the time
+		let today: Moment = this.plugin.makeDate(todayS)
 		let daf = this.plugin.findDafByDate(today)
 
 		// Make a dropdown list
