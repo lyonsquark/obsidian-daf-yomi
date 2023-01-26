@@ -1,10 +1,10 @@
 # Obsidian Daf Yomi
 
-(See this [thread](https://forum.obsidian.md/t/new-plugin-daf-yomi/22075) on the Obsidian Forum for up-to-date news)
+*See this [thread](https://forum.obsidian.md/t/new-plugin-daf-yomi/22075) on the Obsidian Forum for up-to-date news.*
 
 The purpose of this [Obsidian](https://obsidian.md) plugin is to prepare a note page for the day's *Daf Yomi* (Hebrew for "page of the day").
 
-[Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi), [called](https://www.wsj.com/articles/the-worlds-largest-book-club-1505861966) "The World's Largest Book Club", is the practice of learning a page of the [Talmud](https://en.wikipedia.org/wiki/Talmud) every day on a set schedule. It takes 7.5 years (a "cycle") to read all 2,711 pages. The first cycle started in 1923. We're now in the 14th cycle which began on January 5, 2020. The community of Daf Yomi participants is estimated to be over 350,000 people from religious to non-religious Jews and non-Jews.
+[Daf Yomi](https://en.wikipedia.org/wiki/Daf_Yomi), [called](https://www.wsj.com/articles/the-worlds-largest-book-club-1505861966) "The World's Largest Book Club", is the practice of learning a page of the [Talmud](https://en.wikipedia.org/wiki/Talmud) (another good intro [here](https://steinsaltz.org/talmud/)) every day on a set schedule. It takes 7.5 years (a "cycle") to read all 2,711 pages. The first cycle started in 1923. We're now in the 14th cycle which began on January 5, 2020. The community of Daf Yomi participants is estimated to be over 350,000 people from religious to non-religious Jews and non-Jews.
 
 Compiled from 200-500 CE, the Talmud is the base of Rabbinic Judaism and Jewish religious law and contains not just the laws, but exhaustive arguments surrounding them. With Daf Yomi, one learns more about these laws, about this "talmudic" way of thinking, and what life was like a long time ago (hint: be happy that toilet paper has much improved!).
 
