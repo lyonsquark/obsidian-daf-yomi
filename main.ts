@@ -93,6 +93,9 @@ export default class DafYomi extends Plugin {
 		// that daf is in the old chapter and the next daf is in the new chapter.
 
 		this.tractates = {
+			"2023-08-15": { startDate: this.makeDate("2023-08-15"), disp: "Kiddushin", linkName:"Kiddushin", prakim: [41,59,69],  stpdf: "Kiddushin/Kiddushin_", stc:"kuddishin", myjl: "kiddishin-", sf:"Kuddishin.", dydg: "Kuddishin%20", hd: "kiddushin", lgg: "kiddushin-"},
+			"2023-05-18": { startDate: this.makeDate("2023-05-18"), disp: "Gittin", linkName: "Gittin", prakim: [15,24,49,63,68,77,82],  stpdf: "Gittin/Gittin_", stc:"gittin", myjl: "gittin-", sf: "Gittin.", dydg: "Gittin%20", hd: "gittin", lgg: "gittin-"},
+			"2023-03-31": { startDate: this.makeDate("2023-03-31"), disp: "Sotah", linkName: "Sotah", prakim: [14,19,24,28,31,33,42,45],  stpdf: "Sotah/Sotah_", stc: "sotah", myjl: "sotah-", sf: "Sotah.", dydg: "Sotah%20", hd: "sotah", lgg: "sotah-"},
 			"2023-01-25" : {startDate:this.makeDate("2023-01-25"), disp:"Nazir", linkName:"Nazir", prakim:[9, 16, 21, 31, 34, 47, 57, 61], stpdf:"Nazir/Nazir_", stc:"nazir", myjl:"nazir-", sf:"Nazir.", dydg:"Nazir%20", hd:"nazir-", lgg:'nazir-'},
 			"2022-10-27" : {startDate:this.makeDate("2022-10-27"), disp:"Nedarim", linkName:"Nedarim", prakim:[14, 21, 33, 46, 49, 54, 60, 67, 79], stpdf:"Nedarim/Nedarim_", stc:"nedarim", myjl:"nedarim-", sf:"Nedarim.", dydg:"Nedarim%20", hd:"nedarim-", lgg:'nedarim-'},
 			"2022-07-08" : {startDate:this.makeDate("2022-07-08"), disp:"Ketubot", linkName:"Ketubot", prakim:[16, 29, 42, 55, 66, 70, 78, 83, 90, 96, 102, 105], stpdf:"Ketubot/Ketubot_", stc:"ketubot", myjl:"ketubot-", sf:"Ketubot.", dydg:"Kesuvos%20", hd:"ketubot-", lgg:'ketubot-'},
